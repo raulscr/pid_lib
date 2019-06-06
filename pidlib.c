@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    pidlib.c
   * @author  Raul Scarmocin
-  * @version V2.0.1
-  * @date    30-May-2019
+  * @version V2.1.1
+  * @date    3-Jun-2019
   * @brief   This file provides all the PID-Control functions
   ******************************************************************************
   */
@@ -15,7 +15,7 @@
   * @brief  Initializes the PID-Controller
   * @param  pid: pointer to a pid_type structure that will be initialized
   * @param  Ka:	Ka-Constant value, where Ka = (2*Kp*fs + Ki + 2*Kd*fs²)/(2*fs)
-  * @param  Kb:	Kb-Constant value, where Kb = Kd*fs + Kp/2
+  * @param  Kb:	Kb-Constant value, where Kb = -Kd*fs - Kp/2
   * @param  Kc:	Kc-Constant value, where Kc = Kd * fs / 2
   * @param  ref: reference value, in range of adc-input
   * @param  min_output: minimun output value, in range of pwm-output
@@ -98,7 +98,7 @@ inline void pidLoopRoutine(pid_type *pid){
         pid->err = pid->ref - pid->input;
 
         pid->output = SUM(MULT(pid->Ka, pid->err), (pid_const_t)pid->output);
-        pid->output = SUM(-MULT(pid->Kb, pid->err_1), (pid_const_t)pid->output);
+        pid->output = SUM(MULT(pid->Kb, pid->err_1), (pid_const_t)pid->output);
         pid->output = SUM(MULT(pid->Kc, pid->err_2), (pid_const_t)pid->output);
 
         if(pid->output > pid->max_output)
