@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    pidlib.h
   * @author  Raul Scarmocin
-  * @version V2.0.0
+  * @version V2.1.2
   * @date    30-May-2019
   * @brief   This file provides all the PID-Control functions
   ******************************************************************************
@@ -25,18 +25,21 @@
 
 #if defined(Q7_OP)
 typedef q7_t   pid_const_t;
+#define PARSE_OP(NUM) double_to_q7(NUM)
 #define SUM(NUM1, NUM2) q7_sum(NUM1, NUM2)
 #define MULT(NUM1, NUM2) q7_mult(NUM1, NUM2)
 #define DIV(NUM1, NUM2) q7_div(NUM1, NUM2)
 
 #elif defined(Q15_OP)
 typedef q15_t   pid_const_t;
+#define PARSE_OP(NUM) double_to_q15(NUM)
 #define SUM(NUM1, NUM2) q15_sum(NUM1, NUM2)
 #define MULT(NUM1, NUM2) q15_mult(NUM1, NUM2)
 #define DIV(NUM1, NUM2) q15_div(NUM1, NUM2)
 
 #elif defined(Q31_OP)
 typedef q31_t   pid_const_t;
+#define PARSE_OP(NUM) double_to_q31(NUM)
 #define SUM(NUM1, NUM2) q31_sum(NUM1, NUM2)
 #define MULT(NUM1, NUM2) q31_mult(NUM1, NUM2)
 #define DIV(NUM1, NUM2) q31_div(NUM1, NUM2)
@@ -46,12 +49,12 @@ typedef q31_t   pid_const_t;
 #define MULT(NUM1, NUM2) (NUM1 * NUM2)
 #define DIV(NUM1, NUM2) (NUM1 / NUM2)
 
-#if defined(FLOAT_OP)
-typedef float   pid_const_t;
 #elif defined(DOUBLE_OP)
 typedef double   pid_const_t;
+#define PARSE_OP(NUM) (double)(NUM)
 #else
-typedef int   pid_const_t;
+typedef float   pid_const_t;
+#define PARSE_OP(NUM) (float)(NUM)
 #endif
 
 #endif
@@ -101,21 +104,6 @@ typedef struct {
 
 #ifndef PID_PERFORM_WRITE
 #error "PID_PERFORM_WRITE(__OUTPUT__) must be defined"
-#endif
-
-/**
-  * Define PARSE-OP according to the data-type used in the operations
-  */
-#if defined(Q7_OP)
-#define PARSE_OP(NUM) double_to_q7(NUM)
-#elif defined(Q15_OP)
-#define PARSE_OP(NUM) double_to_q15(NUM)
-#elif defined(Q31_OP)
-#define PARSE_OP(NUM) double_to_q31(NUM)
-#elif defined(INT_OP)
-#define PARSE_OP(NUM) (int)(NUM)
-#else
-#define PARSE_OP(NUM) NUM
 #endif
 
 
