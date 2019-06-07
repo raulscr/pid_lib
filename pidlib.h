@@ -24,6 +24,7 @@
   */
 
 #if defined(Q7_OP)
+
 typedef q7_t   pid_const_t;
 #define PARSE_OP(NUM) double_to_q7(NUM)
 #define SUM(NUM1, NUM2) q7_sum(NUM1, NUM2)
@@ -31,6 +32,7 @@ typedef q7_t   pid_const_t;
 #define DIV(NUM1, NUM2) q7_div(NUM1, NUM2)
 
 #elif defined(Q15_OP)
+
 typedef q15_t   pid_const_t;
 #define PARSE_OP(NUM) double_to_q15(NUM)
 #define SUM(NUM1, NUM2) q15_sum(NUM1, NUM2)
@@ -38,26 +40,31 @@ typedef q15_t   pid_const_t;
 #define DIV(NUM1, NUM2) q15_div(NUM1, NUM2)
 
 #elif defined(Q31_OP)
+
 typedef q31_t   pid_const_t;
 #define PARSE_OP(NUM) double_to_q31(NUM)
 #define SUM(NUM1, NUM2) q31_sum(NUM1, NUM2)
 #define MULT(NUM1, NUM2) q31_mult(NUM1, NUM2)
 #define DIV(NUM1, NUM2) q31_div(NUM1, NUM2)
 
-#else
+#elif defined(DOUBLE_OP)
+
+typedef double   pid_const_t;
+#define PARSE_OP(NUM) (double)(NUM)
 #define SUM(NUM1, NUM2) (NUM1 + NUM2)
 #define MULT(NUM1, NUM2) (NUM1 * NUM2)
 #define DIV(NUM1, NUM2) (NUM1 / NUM2)
 
-#elif defined(DOUBLE_OP)
-typedef double   pid_const_t;
-#define PARSE_OP(NUM) (double)(NUM)
 #else
+
 typedef float   pid_const_t;
 #define PARSE_OP(NUM) (float)(NUM)
-#endif
+#define SUM(NUM1, NUM2) (NUM1 + NUM2)
+#define MULT(NUM1, NUM2) (NUM1 * NUM2)
+#define DIV(NUM1, NUM2) (NUM1 / NUM2)
 
 #endif
+
 
 
 
