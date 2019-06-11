@@ -2,14 +2,19 @@
   ******************************************************************************
   * @file    pidlib.c
   * @author  Raul Scarmocin
-  * @version V2.1.1
-  * @date    3-Jun-2019
+  * @version V2.1.2
+  * @date    11-Jun-2019
   * @brief   This file provides all the PID-Control functions
   ******************************************************************************
   */
 
 #include "pidlib.h"
 #include "includes.h"
+
+
+/**
+  * @brief  Try to use ESP32 Dual-core to increase the operations speed
+  */
 
 /**
   * @brief  Initializes the PID-Controller
@@ -90,6 +95,7 @@ inline void pidLoopRoutine(pid_type *pid){
 
 
 
+
 	/**
 	  * @brief  PID-Controller specific operations
 	  */
@@ -97,9 +103,20 @@ inline void pidLoopRoutine(pid_type *pid){
         pid->err_1 = pid->err;
         pid->err = pid->ref - pid->input;
 
+	/**
+	  * @brief  Try to use ESP32 Dual-core to increase the operations speed
+	  */
+	#ifdef PERFORM_PID_LAW
+
+	PERFORM_PID_LAW();
+
+	#else
+
         pid->output = SUM(MULT(pid->Ka, pid->err), (pid_const_t)pid->output);
         pid->output = SUM(MULT(pid->Kb, pid->err_1), (pid_const_t)pid->output);
         pid->output = SUM(MULT(pid->Kc, pid->err_2), (pid_const_t)pid->output);
+
+	#endif
 
         if(pid->output > pid->max_output)
             pid->output = pid->max_output;
